@@ -1,0 +1,9 @@
+{
+  "name": "Aprozar Românesc",
+  "short_name": "Aprozar",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f7f5",
+  "theme_color": "#1b5e20",
+  "icons": [{ "src": "logo.png", "sizes": "any", "type": "image/png" }]
+}

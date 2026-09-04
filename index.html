@@ -6,8 +6,10 @@
 <title>Aprozar Românesc</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1b5e20">
 <style>
-:root{--g:#1b5e20;--g2:#2e7d32;--gl:#e8f5e9;--ink:#1c2430;--mut:#6b7280;--bg:#f7f7f5;--card:#fff;--red:#d92643;--yel:#f5c400;}
+:root{--g:#1b5e20;--g2:#2e7d32;--gl:#e8f5e9;--ink:#1c2430;--mut:#6b7280;--bg:#f7f7f5;--red:#d92643;--yel:#f5c400;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px;}
 .wrap{max-width:480px;margin:0 auto;padding:10px 12px;}
@@ -77,20 +79,23 @@ nav.bottom a span{display:block;font-size:1.1rem;}
 .field label{font-size:.7rem;color:var(--mut);display:block;margin-bottom:3px;}
 .field input,.field select,.field textarea{width:100%;padding:9px;border:1px solid #ddd;border-radius:10px;font-size:.85rem;}
 .empty{color:var(--mut);text-align:center;padding:16px;font-size:.8rem;}
+.msg{margin:4px 0;padding:8px 10px;border-radius:12px;font-size:.8rem;max-width:80%;}
+.msg.me{background:var(--g2);color:#fff;margin-left:auto;}
+.msg.them{background:var(--gl);}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
 <nav class="bottom" id="nav"></nav>
 <script>
-/* ---------- DATE DEMO ---------- */
+/* ---------- DATE ---------- */
 const CATS=['Fructe','Legume','Cartofi și ceapă','Lactate','Cereale','Panificație','Miere și dulciuri','Dulcețuri','Carne și ouă','Pește','Conserve și murături','Băuturi naturale','Plante și ceaiuri','Altele'];
 const PRODUCERS=[
  {id:'p1',name:'Grădina lui Nelu',loc:'Săcueni, Bihor',km:2.1,rating:4.9,rev:87,verified:true,cover:'linear-gradient(135deg,#2e7d32,#81c784)',av:'👨🌾',anunt:''},
  {id:'p2',name:'Legume de la Mama',loc:'Vultureni, Cluj',km:3.4,rating:4.8,rev:64,verified:true,cover:'linear-gradient(135deg,#33691e,#aed581)',av:'👩‍🌾',anunt:'🌞 Reducere 10% la roșii până vineri!'},
- {id:'p3',name:'Ferma Dâmbovița',loc:'Găești, Dâmbovița',km:4.8,rating:4.7,rev:53,verified:true,cover:'linear-gradient(135deg,#4e342e,#a1887f)',av:'🧑‍🌾',anunt:''},
+ {id:'p3',name:'Ferma Dâmbovița',loc:'Găești, Dâmbovița',km:4.8,rating:4.7,rev:53,verified:true,cover:'linear-gradient(135deg,#4e342e,#a1887f)',av:'🧑‍',anunt:''},
  {id:'p4',name:'Livada Moise',loc:'Odobești, Vrancea',km:6.2,rating:4.8,rev:41,verified:true,cover:'linear-gradient(135deg,#1b5e20,#a5d6a7)',av:'👩‍',anunt:'🚗 Plecat din localitate până marți.'},
- {id:'p5',name:'Stupina Vasile',loc:'Fetești, Ialomița',km:7.5,rating:4.9,rev:38,verified:true,cover:'linear-gradient(135deg,#e65100,#ffcc80)',av:'👨‍',anunt:'🏖️ În concediu 10–20 ale lunii.'}
+ {id:'p5',name:'Stupina Vasile',loc:'Fetești, Ialomița',km:7.5,rating:4.9,rev:38,verified:true,cover:'linear-gradient(135deg,#e65100,#ffcc80)',av:'👨‍🌾',anunt:'🏖️ În concediu 10–20 ale lunii.'}
 ];
 const PRODUCTS=[
  {id:'rosii',p:'p1',name:'Roșii Inimă de Bou',price:12.5,unit:'kg',cat:'Legume',img:'🍅',season:true,desc:'Soi țărănesc inimă de bou, cules copt.'},
@@ -119,41 +124,41 @@ const STORES=[
  {name:'Dor de Casă Oradea',loc:'Oradea',km:95}
 ];
 /* ---------- STATE ---------- */
-const DEF={tab:'acasa',sub:null,role:'cumparator',adsOn:true,adInterval:6,badges:{dor:'SPONSOR',serv:'PARTENER'},favP:[],favPr:[],cart:{},history:[],
+const DEF={tab:'acasa',sub:null,role:'cumparator',adsOn:true,adInterval:6,badges:{dor:'SPONSOR',serv:'PARTENER'},favP:[],favPr:[],cart:{},history:[],extraProducts:[],anunts:{},verif:{},msgs:{p1:[{me:false,t:'Bună ziua! Ce roșii aveți azi?'}]},
  reviews:{p1:[{u:'Ana M.',r:5,t:'Roșii ca la piața din copilărie!',rep:[]}],p2:[{u:'Ioan P.',r:5,t:'Cartofi excelenți, livrare rapidă.',rep:[]}],p5:[{u:'Maria D.',r:4,t:'Miere foarte bună.',rep:[]}]}};
 let state;
 try{state=Object.assign({},DEF,JSON.parse(localStorage.getItem('aprozar_v2')||'{}'));}catch(e){state=JSON.parse(JSON.stringify(DEF));}
 function save(){localStorage.setItem('aprozar_v2',JSON.stringify(state));}
 let adIdx=0, openHist=null;
-/* ---------- HELPERS ---------- */
 const $=s=>document.querySelector(s);
 const lei=v=>v.toFixed(2).replace('.',',')+' lei';
-const prod=id=>PRODUCTS.find(p=>p.id===id);
-const ferm=id=>PRODUCERS.find(p=>p.id===id);
+function allProducts(){return PRODUCTS.concat(state.extraProducts||[]);}
+function prod(id){return allProducts().find(p=>p.id===id);}
+function ferm(id){return PRODUCERS.find(p=>p.id===id);}
+function isVerif(id){const f=ferm(id);return state.verif[id]!==undefined?state.verif[id]:f.verified;}
+function anuntOf(id){return state.anunts[id]!==undefined?state.anunts[id]:ferm(id).anunt;}
 function cartTotal(){let t=0;for(const id in state.cart){t+=state.cart[id]*prod(id).price;}return t;}
 function cartCount(){let n=0;for(const id in state.cart)n++;return n;}
 function addQty(id,d){const st=prod(id).unit==='kg'?0.5:1;state.cart[id]=Math.max(0,(state.cart[id]||0)+d*st);if(state.cart[id]<=0)delete state.cart[id];save();render();}
 function toggleFavP(id){const i=state.favP.indexOf(id);i<0?state.favP.push(id):state.favP.splice(i,1);save();render();}
 function toggleFavPr(id){const i=state.favPr.indexOf(id);i<0?state.favPr.push(id):state.favPr.splice(i,1);save();render();}
 function go(tab,sub){state.tab=tab;state.sub=sub||null;openHist=null;save();render();window.scrollTo(0,0);}
-/* ---------- ADS ---------- */
+/* ---------- RECLAME (JOS, rotative) ---------- */
 const ADS=[
- {id:'dor',title:'Dor de Casă',sub:'Lanțul de magazine Călin Donca · 300+ magazine în toată România.',b1:'Cel mai apropiat magazin',b2:'Toate magazinele'},
- {id:'serv',title:'Servicii Locale',sub:'Electricieni, instalatori, zugravi — verificați, lângă tine.',b1:'Vezi meseriașii',b2:''}
+ {kind:'img',src:'reclama2.png',href:'https://aprozar-romanesc3.grok.me/'},
+ {kind:'img',src:'reclama3.png',href:'https://aprozar-romanesc3.grok.me/'},
+ {kind:'img',src:'reclama1.png',href:'https://aprozar-romanesc3.grok.me/'},
+ {kind:'dor'},
+ {kind:'serv'}
 ];
-function adHTML(){
- if(!state.adsOn)return'';
+function adBottomHTML(){
+ if(!state.adsOn)return '<div id="adslot"></div>';
  const a=ADS[adIdx%ADS.length];
- const badge=state.badges[a.id]||'';
- return `<div class="adbar">
-   ${badge?`<span class="badge">${badge}</span>`:''}
-   <h3>${a.title}</h3><p>${a.sub}</p>
-   <div class="btns">
-     <button class="btn y" onclick="${a.id==='dor'?`go('acasa',{t:'stores'})`:`window.open('https://serviciilocale.netlify.app/')`}">${a.b1}</button>
-     ${a.b2?`<button class="btn g" onclick="go('acasa',{t:'stores'})">${a.b2}</button>`:''}
-   </div></div>`;
+ if(a.kind==='img')return `<div id="adslot" style="margin:12px 0"><img src="${a.src}" onerror="this.style.display='none'" onclick="window.open('${a.href}')" style="width:100%;height:110px;object-fit:cover;border-radius:14px;cursor:pointer"></div>`;
+ if(a.kind==='dor')return `<div id="adslot"><div class="adbar"><span class="badge">${state.badges.dor||'SPONSOR'}</span><h3>Dor de Casă</h3><p>Lanțul de magazine Călin Donca · 300+ magazine în toată România.</p><div class="btns"><button class="btn y" onclick="go('acasa',{t:'stores'})">Cel mai apropiat magazin</button><button class="btn g" onclick="go('acasa',{t:'stores'})">Toate magazinele</button></div></div></div>`;
+ return `<div id="adslot"><div class="adbar" style="background:linear-gradient(90deg,#0f1729,#1a2b4a)"><span class="badge">${state.badges.serv||'PARTENER'}</span><h3>Servicii Locale</h3><p>Electricieni, instalatori, zugravi — verificați, lângă tine.</p><div class="btns"><button class="btn y" onclick="window.open('https://serviciilocale.netlify.app/')">Vezi meseriașii</button></div></div></div>`;
 }
-setInterval(()=>{adIdx++;const el=$('#adslot');if(el)el.outerHTML=`<div id="adslot">${adHTML()}</div>`;},Math.max(3,state.adInterval)*1000);
+setInterval(()=>{adIdx++;const el=$('#adslot');if(el)el.outerHTML=adBottomHTML();},Math.max(3,state.adInterval)*1000);
 /* ---------- COMPONENTE ---------- */
 function headerHTML(){return `<header><img class="logoimg" src="logo.png" alt="" onerror="this.style.display='none'"><div class="logo">APROZAR ROMÂNESC</div></header>`;}
 function searchHTML(){return `<div class="searchbox"><input id="q" placeholder="Produse, producători sau ferme..." oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter'){go('acasa',{t:'rez',q:this.value})}"><div class="sugg" id="sugg" style="display:none"></div></div>`;}
@@ -161,7 +166,7 @@ function onSearch(v){
  const s=$('#sugg');if(!s)return;
  if(!v){s.style.display='none';return;}
  const q=v.toLowerCase();
- const pr=PRODUCTS.filter(p=>p.name.toLowerCase().includes(q)).slice(0,4);
+ const pr=allProducts().filter(p=>p.name.toLowerCase().includes(q)).slice(0,4);
  const fe=PRODUCERS.filter(p=>p.name.toLowerCase().includes(q)).slice(0,3);
  if(!pr.length&&!fe.length){s.style.display='none';return;}
  s.style.display='block';
@@ -173,7 +178,7 @@ function pcardHTML(f){return `<div class="pcard" onclick="go('acasa',{t:'ferma',
   <button class="heart" onclick="event.stopPropagation();toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button>
   <div class="cover" style="background:${f.cover}">${f.av}</div>
   <div class="pav">${f.av}</div>
-  <div class="body"><h4>${f.verified?'✅ ':''}${f.name}</h4><div class="meta">${f.loc}</div>
+  <div class="body"><h4>${isVerif(f.id)?'✅ ':''}${f.name}</h4><div class="meta">${f.loc}</div>
   <div class="stars">★ ${f.rating} (${f.rev}) · 📍 ${f.km} km</div></div></div>`;}
 function prodrowHTML(p,quick){const q=state.cart[p.id]||0;return `<div class="prodrow" ${quick?'':`onclick="go('acasa',{t:'produs',id:'${p.id}'})"`}>
   ${p.season?'<span class="season">ÎN SEZON</span>':''}
@@ -183,13 +188,12 @@ function prodrowHTML(p,quick){const q=state.cart[p.id]||0;return `<div class="pr
   <div class="right"><div class="price">${lei(p.price)}/${p.unit}</div>
   <div class="qty"><button onclick="event.stopPropagation();addQty('${p.id}',-1)">−</button><span>${q?q+(p.unit==='kg'?' kg':' buc'):''}</span><button onclick="event.stopPropagation();addQty('${p.id}',1)">+</button></div></div></div>`;}
 function stickyHTML(){const t=cartTotal();if(t<=0)return'';return `<div class="sticky-total" onclick="go('cos')"><span>🛒 ${cartCount()} produse</span><span>Total: ${lei(t)} → Vezi coșul</span></div>`;}
-function adSlot(){return `<div id="adslot">${adHTML()}</div>`;}
 /* ---------- VIEWS ---------- */
 function vAcasa(){
  const last=state.history[0];
- const quick=last?last.items.map(i=>prod(i.id)).filter(Boolean):PRODUCTS.filter(p=>p.season).slice(0,4);
- return adSlot()+searchHTML()+catsHTML()+`
- <div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><b>Ești producător?</b><br><small style="color:var(--mut)">Vinde direct către clienți.</small></div><button class="btn g" onclick="alert('Înscrierea producătorilor: pasul următor!')">+ Adaugă produs</button></div>
+ const quick=last?last.items.map(i=>prod(i.id)).filter(Boolean):allProducts().filter(p=>p.season).slice(0,4);
+ return searchHTML()+catsHTML()+`
+ <div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><b>Ești producător?</b><br><small style="color:var(--mut)">Vinde direct către clienți.</small></div><button class="btn g" onclick="go('cont')">+ Adaugă produs</button></div>
  <h2 class="sec">Producători apropiați <a onclick="go('acasa',{t:'ferme'})">Vezi toți ›</a></h2>
  <div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>
  <h2 class="sec">Ultimele cumpărături <a onclick="go('cont')">Istoric ›</a></h2>
@@ -199,40 +203,40 @@ function vAcasa(){
  <div class="hscroll">${STORIES.map(s=>`<div class="story" onclick="go('acasa',{t:'ferma',id:'${s.p}'})"><small>${ferm(s.p).name}</small><b>${s.t}</b><br><small>${s.txt}</small></div>`).join('')}</div>`;
 }
 function vRez(sub){
- let list=PRODUCTS.slice();
+ let list=allProducts().slice();
  if(sub.cat&&sub.cat!=='Toate')list=list.filter(p=>p.cat===sub.cat);
  if(sub.q){const q=sub.q.toLowerCase();list=list.filter(p=>p.name.toLowerCase().includes(q)||ferm(p.p).name.toLowerCase().includes(q));}
- return adSlot()+searchHTML()+catsHTML(sub.cat)+`<h2 class="sec">Rezultate (${list.length})</h2>`+(list.length?list.map(p=>prodrowHTML(p)).join(''):`<div class="empty">Nimic găsit.</div>`);}
-function vFerme(){return adSlot()+`<h2 class="sec">Toți producătorii (după distanță)</h2><div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>`;}
-function vFerma(id){const f=ferm(id);const revs=state.reviews[id]||[];
- return adSlot()+`<div class="cover-big" style="background:${f.cover}">${f.av}</div><div class="av-big">${f.av}</div>
- <div style="padding:0 14px"><h2 style="margin:6px 0">${f.verified?'✅ ':''}${f.name} <button class="heart" style="position:static" onclick="toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button></h2>
+ return searchHTML()+catsHTML(sub.cat)+`<h2 class="sec">Rezultate (${list.length})</h2>`+(list.length?list.map(p=>prodrowHTML(p)).join(''):`<div class="empty">Nimic găsit.</div>`);}
+function vFerme(){return `<h2 class="sec">Toți producătorii (după distanță)</h2><div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>`;}
+function vFerma(id){const f=ferm(id);const revs=state.reviews[id]||[];const an=anuntOf(id);
+ return `<div class="cover-big" style="background:${f.cover}">${f.av}</div><div class="av-big">${f.av}</div>
+ <div style="padding:0 14px"><h2 style="margin:6px 0">${isVerif(id)?'✅ ':''}${f.name} <button class="heart" style="position:static" onclick="toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button></h2>
  <div style="color:var(--mut);font-size:.8rem">${f.loc} · 📍 ${f.km} km · <span class="stars">★ ${f.rating} (${f.rev} recenzii)</span></div></div>
- ${f.anunt?`<div class="anunt" style="margin:10px 14px">📢 ${f.anunt}</div>`:''}
- <div style="padding:0 12px">${PRODUCTS.filter(p=>p.p===id).map(p=>prodrowHTML(p)).join('')||'<div class="empty">Niciun produs.</div>'}
+ ${an?`<div class="anunt" style="margin:10px 14px">📢 ${an}</div>`:''}
+ <div style="padding:0 12px">${allProducts().filter(p=>p.p===id).map(p=>prodrowHTML(p)).join('')||'<div class="empty">Niciun produs.</div>'}
  <h2 class="sec">Recenzii ${state.role==='cumparator'?`<a onclick="addReview('${id}')">+ Lasă un review</a>`:''}</h2>
  ${revs.map((r,i)=>`<div class="rev">★ ${r.r} · <b>${r.u}</b><br>${r.t}
    ${r.rep.map(x=>`<div class="rep">↩ <b>${x.by}:</b> ${x.t}</div>`).join('')}
    ${(state.role==='producator'||state.role==='admin')?`<a style="color:var(--g2);font-size:.7rem;cursor:pointer" onclick="replyReview('${id}',${i})">Răspunde</a>`:''}</div>`).join('')||'<div class="empty">Fără recenzii încă.</div>'}</div>`;}
 function addReview(id){const u=prompt('Numele tău:');if(!u)return;const r=prompt('Nota (1-5):','5');const t=prompt('Review-ul tău:');if(!t)return;(state.reviews[id]=state.reviews[id]||[]).unshift({u,r:Math.max(1,Math.min(5,+r||5)),t,rep:[]});save();render();}
 function replyReview(id,i){const t=prompt('Răspunsul tău (ca producător):');if(!t)return;(state.reviews[id][i].rep).push({by:'Răspuns producător',t});save();render();}
-function vProdus(id){const p=prod(id);const q=state.cart[id]||0;const same=PRODUCTS.filter(x=>x.p===p.p&&x.id!==id);
- return adSlot()+`<div class="cover-big" style="background:var(--gl)">${p.img}</div>
+function vProdus(id){const p=prod(id);const q=state.cart[id]||0;const same=allProducts().filter(x=>x.p===p.p&&x.id!==id);
+ return `<div class="cover-big" style="background:var(--gl)">${p.img}</div>
  <div style="padding:10px 14px"><small style="color:var(--mut)">Produse / ${p.cat}</small><h2>${p.name}</h2>
  <div style="color:var(--g2);font-size:.85rem;margin:4px 0;cursor:pointer" onclick="go('acasa',{t:'ferma',id:'${p.p}'})">${ferm(p.p).name} · ${ferm(p.p).loc}</div>
  <p style="font-size:.8rem;color:var(--mut)">${p.desc}</p>
  <div style="font-weight:900;font-size:1.1rem;margin:8px 0">${lei(p.price)} / ${p.unit}</div>
- <div class="qty" style="justify-content:flex-start"><button onclick="addQty('${p.id}',-1)">−</button><span>${q?q+(p.unit==='kg'?' kg':' buc'):'0'}</span><button onclick="addQty('${p.id}',1)">+</button></div>
+ <div class="qty" style="justify-content:flex-start"><button onclick="addQty('${id}',-1)">−</button><span>${q?q+(p.unit==='kg'?' kg':' buc'):'0'}</span><button onclick="addQty('${id}',1)">+</button></div>
  <div style="font-size:.8rem;margin:6px 0">Total: <b>${lei(q*p.price)}</b></div>
- <button class="btn g" style="width:100%;border-radius:12px;padding:12px" onclick="addQty('${p.id}',1)">Adaugă în coș</button>
- <button class="heart" style="position:static;margin-top:8px" onclick="toggleFavPr('${p.id}')">${state.favPr.includes(p.id)?'❤️ La favorite':'🤍 Adaugă la favorite'}</button>
+ <button class="btn g" style="width:100%;border-radius:12px;padding:12px" onclick="addQty('${id}',1)">Adaugă în coș</button>
+ <button class="heart" style="position:static;margin-top:8px" onclick="toggleFavPr('${id}')">${state.favPr.includes(id)?'❤️ La favorite':'🤍 Adaugă la favorite'}</button>
  ${same.length?`<h2 class="sec">De la același loc</h2>`+same.map(x=>prodrowHTML(x)).join(''):''}</div>`;}
 function vStores(){const s=STORES.slice().sort((a,b)=>a.km-b.km);
- return adSlot()+`<div class="card"><h2>🏪 Cel mai apropiat magazin</h2><p style="font-size:.9rem;font-weight:800;color:var(--g)">${s[0].name}</p><small style="color:var(--mut)">${s[0].loc} · 📍 ${s[0].km} km</small></div>
+ return `<div class="card"><h2>🏪 Cel mai apropiat magazin</h2><p style="font-size:.9rem;font-weight:800;color:var(--g)">${s[0].name}</p><small style="color:var(--mut)">${s[0].loc} · 📍 ${s[0].km} km</small></div>
  <h2 class="sec">Toate magazinele (după distanță)</h2>${s.map(x=>`<div class="prodrow"><div class="img">🏪</div><div class="info"><b>${x.name}</b><small>${x.loc}</small></div><div class="right"><b>${x.km} km</b></div></div>`).join('')}`;}
 function vCos(){const ids=Object.keys(state.cart);
- if(!ids.length)return adSlot()+`<div class="empty">Coșul e gol. 🧺<br><button class="btn g" style="margin-top:10px" onclick="go('acasa')">Vezi produsele</button></div>`;
- return adSlot()+`<h2 class="sec">Coșul tău</h2>${ids.map(id=>prodrowHTML(prod(id),true)).join('')}
+ if(!ids.length)return `<div class="empty">Coșul e gol. 🧺<br><button class="btn g" style="margin-top:10px" onclick="go('acasa')">Vezi produsele</button></div>`;
+ return `<h2 class="sec">Coșul tău</h2>${ids.map(id=>prodrowHTML(prod(id),true)).join('')}
  <div class="card"><div style="display:flex;justify-content:space-between;font-weight:900"><span>Total</span><span>${lei(cartTotal())}</span></div>
  <button class="btn g" style="width:100%;margin-top:10px;border-radius:12px;padding:12px" onclick="checkout()">✅ Finalizează comanda</button>
  <button class="btn o" style="width:100%;margin-top:8px;border-radius:12px" onclick="waOrder()">📲 Trimite pe WhatsApp</button></div>`;}
@@ -241,26 +245,51 @@ function checkout(){const items=Object.keys(state.cart).map(id=>({id,qty:state.c
  state.cart={};save();go('cont');alert('✅ Comanda a fost înregistrată în istoric!');}
 function waOrder(){let txt='Comandă Aprozar Românesc:%0A';for(const id in state.cart){txt+=`- ${prod(id).name} x${state.cart[id]} ${prod(id).unit} = ${lei(state.cart[id]*prod(id).price)}%0A`;}txt+=`Total: ${lei(cartTotal())}`;window.open('https://wa.me/40770148119?text='+txt);}
 function vFav(){const fp=state.favP.map(ferm),fr=state.favPr.map(prod);
- return adSlot()+`<h2 class="sec">❤️ Producători favoriți</h2>${fp.length?`<div class="hscroll">${fp.map(pcardHTML).join('')}</div>`:'<div class="empty">Niciun producător favorit.</div>'}
+ return `<h2 class="sec">❤️ Producători favoriți</h2>${fp.length?`<div class="hscroll">${fp.map(pcardHTML).join('')}</div>`:'<div class="empty">Niciun producător favorit.</div>'}
  <h2 class="sec">❤️ Produse favorite</h2>${fr.length?fr.map(p=>prodrowHTML(p)).join(''):'<div class="empty">Niciun produs favorit.</div>'}`;}
-function vMesaje(){return adSlot()+`<div class="card"><b>💬 Mesaje</b><p style="font-size:.8rem;color:var(--mut);margin-top:6px">Conversațiile cumpărător ↔ producător vin în pasul următor (Panou Producător).</p></div>`;}
+function vMesaje(){const th=state.msgs.p1||[];
+ return `<div class="card"><b>💬 Conversație cu Grădina lui Nelu</b>
+ <div style="max-height:300px;overflow-y:auto;margin:8px 0">${th.map(m=>`<div class="msg ${m.me?'me':'them'}">${m.t}</div>`).join('')}</div>
+ <div class="field"><input id="msg-in" placeholder="Scrie un mesaj..."></div>
+ <button class="btn g" style="width:100%" onclick="sendMsg()">Trimite</button></div>`;}
+function sendMsg(){const i=$('#msg-in');if(!i||!i.value)return;(state.msgs.p1=state.msgs.p1||[]).push({me:true,t:i.value});save();render();}
 function vCont(){
- return adSlot()+`
+ return `
  <div class="card"><b>👤 Cont & rol (demo)</b>
  <div style="display:flex;gap:8px;margin-top:8px">
  ${['cumparator','producator','admin'].map(r=>`<button class="btn ${state.role===r?'g':'o'}" onclick="state.role='${r}';save();render()">${r}</button>`).join('')}</div></div>
+ ${state.role==='producator'?producerHTML():''}
  ${state.role==='admin'?adminHTML():''}
  <h2 class="sec">🧾 Istoric comenzi</h2>
  ${state.history.length?state.history.map((h,i)=>`<div class="hist"><div class="row" onclick="openHist=openHist===${i}?null:${i};render()">
    <span class="date">📅 ${h.date}</span><span class="sum">${lei(h.total)}</span><span>${openHist===i?'▲':'▼'}</span></div>
    ${openHist===i?`<div class="det">${h.items.map(it=>`<div style="display:flex;justify-content:space-between"><span>${prod(it.id)?prod(it.id).name:'?'} x${it.qty}</span><b>${lei(it.qty*it.price)}</b></div>`).join('')}
    <button class="btn g" style="width:100%;margin-top:8px" onclick="rebuy(${i})">🔁 Cumpără din nou</button></div>`:''}</div>`).join(''):'<div class="empty">Nicio comandă încă.</div>'}
- <div class="card"><b>⚙️ Setări reclame</b>
+ <div class="card"><b>💾 Backup</b>
+ <div style="display:flex;gap:8px;margin-top:8px"><button class="btn o" onclick="exportBackup()">⬇ Descarcă</button><button class="btn o" onclick="$('#imp').click()">⬆ Restaurează</button><input type="file" id="imp" style="display:none" onchange="importBackup(this.files[0])"></div></div>
+ <div class="card"><b>⚙️ Setări reclame (jos)</b>
    <div class="field"><label>Interval rotire (secunde)</label><input type="number" value="${state.adInterval}" onchange="state.adInterval=Math.max(3,+this.value||6);save()"></div>
    <div class="field"><label>Reclame active</label><select onchange="state.adsOn=this.value==='da';save();render()"><option value="da" ${state.adsOn?'selected':''}>da</option><option value="nu" ${!state.adsOn?'selected':''}>nu</option></select></div></div>`;}
+function producerHTML(){return `<div class="card"><b>👨‍ Panou Producător (Grădina lui Nelu)</b>
+ <div class="field"><label>📢 Anunțul tău (concediu / reduceri / plecat)</label><input value="${state.anunts.p1||''}" onchange="state.anunts.p1=this.value;save();render()"></div>
+ <div class="field"><label>Produs nou — nume</label><input id="np-name" placeholder="ex. Castraveți"></div>
+ <div class="field"><label>Preț (lei)</label><input id="np-price" type="number" step="0.1" placeholder="ex. 9.5"></div>
+ <div class="field"><label>Unitate</label><select id="np-unit"><option>kg</option><option>buc</option></select></div>
+ <div class="field"><label>Categorie</label><select id="np-cat">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+ <div class="field"><label>Emoji</label><input id="np-img" placeholder="ex. 🥒" maxlength="4"></div>
+ <button class="btn g" style="width:100%" onclick="addProduct()">+ Adaugă produsul</button></div>`;}
+function addProduct(){const n=$('#np-name'),pr=$('#np-price');if(!n||!n.value||!pr||!pr.value){alert('Completează nume și preț.');return;}
+ state.extraProducts=state.extraProducts||[];
+ state.extraProducts.push({id:'x'+Date.now(),p:'p1',name:n.value,price:+pr.value,unit:$('#np-unit').value,cat:$('#np-cat').value,img:($('#np-img').value||'🥬'),season:true,desc:'Adăugat din panoul producătorului.'});
+ save();render();alert('✅ Produs adăugat!');}
 function adminHTML(){return `<div class="card"><b>🛠️ Admin — etichete reclame</b>
- ${Object.keys(state.badges).map(k=>`<div class="field"><label>${k==='dor'?'Dor de Casă':'Servicii Locale'} (badge dreapta-sus)</label><input value="${state.badges[k]}" onchange="state.badges['${k}']=this.value;save();render()"></div>`).join('')}</div>`;}
+ ${Object.keys(state.badges).map(k=>`<div class="field"><label>${k==='dor'?'Dor de Casă':'Servicii Locale'} (badge)</label><input value="${state.badges[k]}" onchange="state.badges['${k}']=this.value;save();render()"></div>`).join('')}</div>
+ <div class="card"><b>✅ Verificare producători</b>
+ ${PRODUCERS.map(f=>`<div class="prodrow"><div class="info"><b>${f.name}</b><small>${f.loc}</small></div><button class="btn o" onclick="toggleVerif('${f.id}')">${isVerif(f.id)?'✅ Verificat':'⬜ Neverificat'}</button></div>`).join('')}</div>`;}
+function toggleVerif(id){state.verif[id]=!isVerif(id);save();render();}
 function rebuy(i){const h=state.history[i];h.items.forEach(it=>{state.cart[it.id]=(state.cart[it.id]||0)+it.qty;});save();go('cos');}
+function exportBackup(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='aprozar-backup.json';a.click();}
+function importBackup(f){if(!f)return;const r=new FileReader();r.onload=()=>{try{state=Object.assign({},DEF,JSON.parse(r.result));save();render();alert('✅ Restaurat!');}catch(e){alert('Fișier invalid.');}};r.readAsText(f);}
 /* ---------- RENDER ---------- */
 function render(){
  const sub=state.sub;let html='';
@@ -276,10 +305,11 @@ function render(){
  else if(state.tab==='favorite')html=vFav();
  else if(state.tab==='mesaje')html=vMesaje();
  else html=vCont();
- $('#app').innerHTML=headerHTML()+(state.tab!=='acasa'||!sub?stickyHTML():'')+html;
+ $('#app').innerHTML=headerHTML()+(state.tab!=='acasa'||!sub?stickyHTML():'')+html+adBottomHTML();
  $('#nav').innerHTML=[['acasa','🏠','Acasă'],['mesaje','💬','Mesaje'],['favorite','❤️','Favorite'],['cos','🛒','Coș'],['cont','👤','Cont']].map(n=>`<a class="${state.tab===n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</a>`).join('');
 }
 render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
 </script>
 </body>
 </html>
