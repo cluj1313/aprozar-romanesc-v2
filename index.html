@@ -15,8 +15,10 @@ body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var
 .wrap{max-width:480px;margin:0 auto;padding:10px 12px;}
 @media(min-width:500px){.wrap{box-shadow:0 0 24px rgba(0,0,0,.10);min-height:100vh;background:#fcfcfa;}}
 header{display:flex;align-items:center;gap:10px;padding:6px 0;}
-header .logo{font-weight:900;color:var(--g);font-size:1.1rem;white-space:nowrap;}
+header .logo{font-weight:900;color:var(--g);font-size:1.1rem;white-space:nowrap;flex:1;}
 header .logoimg{width:46px;height:46px;object-fit:contain;}
+.mi{padding:10px 14px;font-size:.9rem;font-weight:600;cursor:pointer;border-bottom:1px solid #f0f0f0;}
+.mi:last-child{border-bottom:none;}
 .searchbox{position:relative;flex:1;}
 .searchbox input{width:100%;padding:10px 12px;border-radius:999px;border:1px solid #ddd;font-size:.9rem;}
 .sugg{position:absolute;top:44px;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:12px;z-index:30;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.12);}
@@ -83,14 +85,14 @@ nav.bottom a span{display:block;font-size:1.1rem;}
 .msg.them{background:var(--gl);}
 .adwrap{margin:12px 0;position:relative;}
 .adwrap .badge{position:absolute;top:8px;right:8px;background:var(--red);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:1px;z-index:2;}
-.adwrap img.main{width:100%;height:110px;object-fit:cover;border-radius:14px;cursor:pointer;}
+.adwrap img.main{width:100%;object-fit:cover;border-radius:14px;cursor:pointer;}
 .dorbox{border-radius:14px;overflow:hidden;background:#201a14;color:#fff;position:relative;}
 .dorbox img.bg{width:100%;height:90px;object-fit:cover;}
 .dorbox .in{padding:10px 14px;}
 .dorbox h3{font-style:italic;font-family:Georgia,serif;font-size:1.05rem;}
 .dorbox p{font-size:.72rem;opacity:.9;margin:2px 0 8px;}
 .dorbox .btns{display:flex;gap:8px;flex-wrap:wrap;}
-.dorbox .logo{position:absolute;top:10px;left:12px;width:40px;height:40px;object-fit:contain;background:rgba(255,255,255,.9);border-radius:50%;padding:4px;}
+.dorbox .logo{position:absolute;top:10px;left:12px;width:40px;height:40px;object-fit:contain;background:rgba(255,255,255,.9);border-radius:50%;padding:4px;z-index:2;}
 </style>
 </head>
 <body>
@@ -148,7 +150,7 @@ const STORES=[
  {name:'Dor de Casă Oradea',loc:'Oradea',km:95}
 ];
 /* ---------- STATE ---------- */
-const DEF={tab:'acasa',sub:null,role:'cumparator',adsOn:true,adInterval:6,badges:{dor:'SPONSOR',serv:'PARTENER'},favP:[],favPr:[],cart:{},history:[],extraProducts:[],anunts:{},verif:{},msgs:{p1:[{me:false,t:'Bună ziua! Ce roșii aveți azi?'}]},
+const DEF={tab:'acasa',sub:null,menuOpen:false,role:'cumparator',adsOn:true,adInterval:6,badges:{dor:'SPONSOR',serv:'PARTENER'},favP:[],favPr:[],cart:{},history:[],extraProducts:[],anunts:{},verif:{},msgs:{p1:[{me:false,t:'Bună ziua! Ce roșii aveți azi?'}]},
  reviews:{p1:[{u:'Ana M.',r:5,t:'Roșii ca la piața din copilărie!',rep:[]}],p2:[{u:'Ioan P.',r:5,t:'Cartofi excelenți, livrare rapidă.',rep:[]}],p5:[{u:'Maria D.',r:4,t:'Miere foarte bună.',rep:[]}]}};
 let state;
 try{state=Object.assign({},DEF,JSON.parse(localStorage.getItem('aprozar_v2')||'{}'));}catch(e){state=JSON.parse(JSON.stringify(DEF));}
@@ -166,25 +168,33 @@ function cartCount(){let n=0;for(const id in state.cart)n++;return n;}
 function addQty(id,d){const st=prod(id).unit==='kg'?0.5:1;state.cart[id]=Math.max(0,(state.cart[id]||0)+d*st);if(state.cart[id]<=0)delete state.cart[id];save();render();}
 function toggleFavP(id){const i=state.favP.indexOf(id);i<0?state.favP.push(id):state.favP.splice(i,1);save();render();}
 function toggleFavPr(id){const i=state.favPr.indexOf(id);i<0?state.favPr.push(id):state.favPr.splice(i,1);save();render();}
-function go(tab,sub){state.tab=tab;state.sub=sub||null;openHist=null;save();render();window.scrollTo(0,0);}
+function go(tab,sub){state.tab=tab;state.sub=sub||null;state.menuOpen=false;openHist=null;save();render();window.scrollTo(0,0);}
 /* ---------- RECLAME JOS ---------- */
 const ADS=[
- {kind:'img',src:'reclama1.png',href:'https://aprozar-romanesc3.grok.me/'},
- {kind:'img',src:'reclama2.png',href:'https://aprozar-romanesc3.grok.me/'},
- {kind:'img',src:'reclama3.png',href:'https://aprozar-romanesc3.grok.me/'},
+ {kind:'img',src:'reclama1.png',h:120,href:'https://aprozar-romanesc3.grok.me/'},
+ {kind:'img',src:'og.jpg',h:120,href:'https://aprozar-romanesc3.grok.me/'},
+ {kind:'img',src:'hero.jpg',h:120,href:'https://aprozar-romanesc3.grok.me/'},
  {kind:'dor'},
  {kind:'serv'}
 ];
 function adBottomHTML(){
  if(!state.adsOn)return '<div id="adslot"></div>';
  const a=ADS[adIdx%ADS.length];
- if(a.kind==='img')return `<div id="adslot" class="adwrap"><img class="main" src="${a.src}" onerror="this.style.display='none'" onclick="window.open('${a.href}')"></div>`;
+ if(a.kind==='img')return `<div id="adslot" class="adwrap"><img class="main" style="height:${a.h||110}px" src="${a.src}" onerror="this.style.display='none'" onclick="window.open('${a.href}')"></div>`;
  if(a.kind==='dor')return `<div id="adslot" class="adwrap"><span class="badge">${state.badges.dor||'SPONSOR'}</span><div class="dorbox"><img class="logo" src="dor-logo.png"><img class="bg" src="dor-banner.jpg"><div class="in"><h3>Dor de Casă</h3><p>Lanțul de magazine Călin Donca · <b>300+ magazine</b> în toată România.</p><div class="btns"><button class="btn y" onclick="go('acasa',{t:'stores'})">Cel mai apropiat magazin</button><button class="btn g" onclick="go('acasa',{t:'stores'})">Toate magazinele</button></div></div></div></div>`;
  return `<div id="adslot" class="adwrap"><span class="badge">${state.badges.serv||'PARTENER'}</span><div class="dorbox" style="background:linear-gradient(90deg,#0f1729,#1a2b4a)"><img class="logo" src="servicii-locale-logo.png"><img class="bg" src="servicii-locale-map.jpg" style="opacity:.5"><div class="in"><h3 style="font-family:inherit;font-style:normal">Servicii Locale</h3><p>Electricieni, instalatori, zugravi — verificați, lângă tine.</p><div class="btns"><button class="btn y" onclick="window.open('https://serviciilocale.netlify.app/')">Vezi meseriașii</button></div></div></div></div>`;
 }
 setInterval(()=>{adIdx++;const el=$('#adslot');if(el)el.outerHTML=adBottomHTML();},Math.max(3,state.adInterval)*1000);
 /* ---------- COMPONENTE ---------- */
-function headerHTML(){return `<header><img class="logoimg" src="brand-logo.png" alt="" onerror="this.style.display='none'"><div class="logo">APROZAR ROMÂNESC</div></header>`;}
+function headerHTML(){
+ const menu=state.menuOpen?`<div class="card" style="margin:0 0 8px;padding:4px 0">
+ <div class="mi" onclick="go('acasa',{t:'ferme'})">👨🌾 Producători</div>
+ <div class="mi" onclick="go('acasa',{t:'produse'})">🛒 Produse</div>
+ <div class="mi" onclick="go('acasa',{t:'povesti'})">📖 Povești</div>
+ <div class="mi" onclick="go('acasa',{t:'stores'})">🏪 Magazine</div>
+ <div class="mi" onclick="go('cont')">👤 Cont & Setări</div></div>`:'';
+ return `<header><img class="logoimg" src="brand-logo.png" onerror="this.style.display='none'"><div class="logo">APROZAR ROMÂNESC</div><button class="btn o" style="padding:6px 12px" onclick="state.menuOpen=!state.menuOpen;save();render()">☰</button></header>${menu}`;
+}
 function searchHTML(){return `<div class="searchbox"><input id="q" placeholder="Produse, producători sau ferme..." oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter'){go('acasa',{t:'rez',q:this.value})}"><div class="sugg" id="sugg" style="display:none"></div></div>`;}
 function onSearch(v){
  const s=$('#sugg');if(!s)return;
@@ -197,7 +207,7 @@ function onSearch(v){
  s.innerHTML=pr.map(p=>`<div onclick="go('acasa',{t:'produs',id:'${p.id}'})"><img src="${p.img}"> ${p.name} · <small>${lei(p.price)}/${p.unit}</small></div>`).join('')+
    fe.map(f=>`<div onclick="go('acasa',{t:'ferma',id:'${f.id}'})"><img src="${f.img}" style="border-radius:50%"> ${f.name} · <small>${f.loc}</small></div>`).join('');
 }
-function catsHTML(sel){return `<div class="cats"><span class="${(!sel||sel==='Toate')?'on':''}" onclick="go('acasa',{t:'rez',cat:'Toate'})">Toate</span>${CATS.map(c=>`<span class="${sel===c?'on':''}" onclick="go('acasa',{t:'rez',cat:'${c}'})">${c}</span>`).join('')}</div>`;}
+function catsHTML(sel){return `<div class="cats"><span class="${(!sel||sel==='Toate')?'on':''}" onclick="go('acasa',{t:'produse',cat:'Toate'})">Toate</span>${CATS.map(c=>`<span class="${sel===c?'on':''}" onclick="go('acasa',{t:'produse',cat:'${c}'})">${c}</span>`).join('')}</div>`;}
 function pcardHTML(f){return `<div class="pcard" onclick="go('acasa',{t:'ferma',id:'${f.id}'})">
   <button class="heart" onclick="event.stopPropagation();toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button>
   <img class="cover" src="${f.img}">
@@ -221,10 +231,10 @@ function vAcasa(){
  <div class="card" style="display:flex;justify-content:space-between;align-items:center"><div><b>Ești producător?</b><br><small style="color:var(--mut)">Vinde direct către clienți.</small></div><button class="btn g" onclick="go('cont')">+ Adaugă produs</button></div>
  <h2 class="sec">Producători apropiați <a onclick="go('acasa',{t:'ferme'})">Vezi toți ›</a></h2>
  <div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>
- <h2 class="sec">Ultimele cumpărături <a onclick="go('cont')">Istoric ›</a></h2>
+ <h2 class="sec">Ultimele cumpărături <a onclick="go('acasa',{t:'produse'})">Toate ›</a></h2>
  <p style="font-size:.7rem;color:var(--mut);margin-bottom:4px">${last?'Reia rapid din comanda din '+last.date:'Produse de sezon, aproape de tine'}:</p>
  ${quick.map(p=>prodrowHTML(p,true)).join('')}
- <h2 class="sec">Poveștile fermierilor <a>Vezi toate ›</a></h2>
+ <h2 class="sec">Poveștile fermierilor <a onclick="go('acasa',{t:'povesti'})">Vezi toate ›</a></h2>
  <div class="hscroll">${STORIES.map(s=>`<div class="story" onclick="go('acasa',{t:'ferma',id:'${s.p}'})"><img src="${s.img}"><div class="sb"><small>${ferm(s.p).name}</small><b>${s.t}</b></div></div>`).join('')}</div>`;
 }
 function vRez(sub){
@@ -232,6 +242,11 @@ function vRez(sub){
  if(sub.cat&&sub.cat!=='Toate')list=list.filter(p=>p.cat===sub.cat);
  if(sub.q){const q=sub.q.toLowerCase();list=list.filter(p=>p.name.toLowerCase().includes(q)||ferm(p.p).name.toLowerCase().includes(q));}
  return searchHTML()+catsHTML(sub.cat)+`<h2 class="sec">Rezultate (${list.length})</h2>`+(list.length?list.map(p=>prodrowHTML(p)).join(''):`<div class="empty">Nimic găsit.</div>`);}
+function vProduse(sub){
+ const cat=(sub&&sub.cat)||'Toate';
+ let list=allProducts(); if(cat!=='Toate')list=list.filter(p=>p.cat===cat);
+ return searchHTML()+catsHTML(cat)+`<h2 class="sec">Toate produsele (${list.length})</h2>`+list.map(p=>prodrowHTML(p)).join('');}
+function vPovesti(){return `<h2 class="sec">Poveștile fermierilor</h2>`+STORIES.map(s=>`<div class="card" style="padding:0;overflow:hidden;cursor:pointer" onclick="go('acasa',{t:'ferma',id:'${s.p}'})"><img src="${s.img}" style="width:100%;height:140px;object-fit:cover"><div style="padding:10px 12px"><small style="color:var(--g2)">${ferm(s.p).name}</small><b style="display:block">${s.t}</b><p style="font-size:.78rem;color:var(--mut)">${s.txt}</p></div></div>`).join('');}
 function vFerme(){return `<h2 class="sec">Toți producătorii (după distanță)</h2><div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>`;}
 function vFerma(id){const f=ferm(id);const revs=state.reviews[id]||[];const an=anuntOf(id);
  return `<img class="cover-big" src="${f.img}"><img class="av-big" src="${f.img}">
@@ -324,6 +339,8 @@ function render(){
    else if(sub&&sub.t==='ferma')html=vFerma(sub.id);
    else if(sub&&sub.t==='produs')html=vProdus(sub.id);
    else if(sub&&sub.t==='stores')html=vStores();
+   else if(sub&&sub.t==='produse')html=vProduse(sub);
+   else if(sub&&sub.t==='povesti')html=vPovesti();
    else html=vAcasa();
  }
  else if(state.tab==='cos')html=vCos();
