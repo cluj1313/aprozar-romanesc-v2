@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aprozar Românesc</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
 <style>
 :root{--g:#1b5e20;--g2:#2e7d32;--gl:#e8f5e9;--ink:#1c2430;--mut:#6b7280;--bg:#f7f7f5;--card:#fff;--red:#d92643;--yel:#f5c400;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px;}
-.wrap{max-width:760px;margin:0 auto;padding:10px 12px;}
+.wrap{max-width:480px;margin:0 auto;padding:10px 12px;}
+@media(min-width:500px){.wrap{box-shadow:0 0 24px rgba(0,0,0,.10);min-height:100vh;background:#fcfcfa;}}
 header{display:flex;align-items:center;gap:10px;padding:6px 0;}
-header .logo{font-weight:900;color:var(--g);font-size:1.15rem;white-space:nowrap;}
-header .av{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffca28,#e53935 60%,#1b5e20);display:flex;align-items:center;justify-content:center;font-size:20px;}
+header .logo{font-weight:900;color:var(--g);font-size:1.1rem;white-space:nowrap;}
+header .logoimg{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#fff;}
 .searchbox{position:relative;flex:1;}
 .searchbox input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #ddd;font-size:.9rem;}
 .sugg{position:absolute;top:44px;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:12px;z-index:30;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.12);}
@@ -56,7 +59,7 @@ h2.sec a{font-size:.72rem;color:var(--g2);cursor:pointer;}
 .story{flex:0 0 240px;background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:12px;scroll-snap-align:start;cursor:pointer;}
 .story b{font-size:.82rem;color:var(--g);}
 .story small{color:var(--mut);font-size:.7rem;}
-nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--g);display:flex;z-index:50;}
+nav.bottom{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:480px;background:var(--g);display:flex;z-index:50;}
 nav.bottom a{flex:1;text-align:center;color:#c8e6c9;font-size:.62rem;padding:8px 0;cursor:pointer;}
 nav.bottom a.on{color:#fff;font-weight:700;}
 nav.bottom a span{display:block;font-size:1.1rem;}
@@ -83,14 +86,14 @@ nav.bottom a span{display:block;font-size:1.1rem;}
 /* ---------- DATE DEMO ---------- */
 const CATS=['Fructe','Legume','Cartofi și ceapă','Lactate','Cereale','Panificație','Miere și dulciuri','Dulcețuri','Carne și ouă','Pește','Conserve și murături','Băuturi naturale','Plante și ceaiuri','Altele'];
 const PRODUCERS=[
- {id:'p1',name:'Grădina lui Nelu',loc:'Săcueni, Bihor',km:2.1,rating:4.9,rev:87,verified:true,cover:'linear-gradient(135deg,#2e7d32,#81c784)',av:'👨‍🌾',anunt:''},
+ {id:'p1',name:'Grădina lui Nelu',loc:'Săcueni, Bihor',km:2.1,rating:4.9,rev:87,verified:true,cover:'linear-gradient(135deg,#2e7d32,#81c784)',av:'👨🌾',anunt:''},
  {id:'p2',name:'Legume de la Mama',loc:'Vultureni, Cluj',km:3.4,rating:4.8,rev:64,verified:true,cover:'linear-gradient(135deg,#33691e,#aed581)',av:'👩‍🌾',anunt:'🌞 Reducere 10% la roșii până vineri!'},
  {id:'p3',name:'Ferma Dâmbovița',loc:'Găești, Dâmbovița',km:4.8,rating:4.7,rev:53,verified:true,cover:'linear-gradient(135deg,#4e342e,#a1887f)',av:'🧑‍🌾',anunt:''},
- {id:'p4',name:'Livada Moise',loc:'Odobești, Vrancea',km:6.2,rating:4.8,rev:41,verified:true,cover:'linear-gradient(135deg,#1b5e20,#a5d6a7)',av:'👩‍🌾',anunt:'🚗 Plecat din localitate până marți.'},
- {id:'p5',name:'Stupina Vasile',loc:'Fetești, Ialomița',km:7.5,rating:4.9,rev:38,verified:true,cover:'linear-gradient(135deg,#e65100,#ffcc80)',av:'👨‍🌾',anunt:'🏖️ În concediu 10–20 ale lunii.'}
+ {id:'p4',name:'Livada Moise',loc:'Odobești, Vrancea',km:6.2,rating:4.8,rev:41,verified:true,cover:'linear-gradient(135deg,#1b5e20,#a5d6a7)',av:'👩‍',anunt:'🚗 Plecat din localitate până marți.'},
+ {id:'p5',name:'Stupina Vasile',loc:'Fetești, Ialomița',km:7.5,rating:4.9,rev:38,verified:true,cover:'linear-gradient(135deg,#e65100,#ffcc80)',av:'👨‍',anunt:'🏖️ În concediu 10–20 ale lunii.'}
 ];
 const PRODUCTS=[
- {id:'rosii',p:'p1',name:'Roșii de inimă',price:12.5,unit:'kg',cat:'Legume',img:'🍅',season:true,desc:'Nelu le culege când crapă ușor la umăr.'},
+ {id:'rosii',p:'p1',name:'Roșii Inimă de Bou',price:12.5,unit:'kg',cat:'Legume',img:'🍅',season:true,desc:'Soi țărănesc inimă de bou, cules copt.'},
  {id:'capsuni',p:'p1',name:'Căpșuni',price:18,unit:'kg',cat:'Fructe',img:'🍓',season:true,desc:'Rânduri mici, fără forțaj.'},
  {id:'cas',p:'p3',name:'Caș afumat',price:28,unit:'kg',cat:'Lactate',img:'🧀',season:false,desc:'Afumat lent, rețetă de familie.'},
  {id:'cartofi',p:'p2',name:'Cartofi roșii',price:7.6,unit:'kg',cat:'Cartofi și ceapă',img:'🥔',season:false,desc:'Copți în sol nisipos.'},
@@ -103,7 +106,7 @@ const PRODUCTS=[
 ];
 const STORIES=[
  {p:'p3',t:'Povestea lui Marin',txt:'De la 3 vaci la o fermă respectată.'},
- {p:'p1',t:'Roșiile de inimă ale lui Nelu',txt:'Secretul: pământ viu, fără grabă.'},
+ {p:'p1',t:'Roșiile Inimă de Bou ale lui Nelu',txt:'Secretul: pământ viu, fără grabă.'},
  {p:'p2',t:'Masa Ioanei',txt:'Legume care chiar au gust.'},
  {p:'p4',t:'Merele de pe deal',txt:'O livadă sădită în 1998.'},
  {p:'p5',t:'Teiul din Fetești',txt:'Mierea care se cristalează firesc.'}
@@ -117,11 +120,11 @@ const STORES=[
 ];
 /* ---------- STATE ---------- */
 const DEF={tab:'acasa',sub:null,role:'cumparator',adsOn:true,adInterval:6,badges:{dor:'SPONSOR',serv:'PARTENER'},favP:[],favPr:[],cart:{},history:[],
- reviews:{p1:[{u:'Ana M.',r:5,t:'Roșii ca la piața din copilărie!',rep:[]}],p2:[{u:'Ioan P.',r:5,t:'Cartofi excelenti, livrare rapidă.',rep:[]}],p5:[{u:'Maria D.',r:4,t:'Miere foarte bună.',rep:[]}]}};
+ reviews:{p1:[{u:'Ana M.',r:5,t:'Roșii ca la piața din copilărie!',rep:[]}],p2:[{u:'Ioan P.',r:5,t:'Cartofi excelenți, livrare rapidă.',rep:[]}],p5:[{u:'Maria D.',r:4,t:'Miere foarte bună.',rep:[]}]}};
 let state;
 try{state=Object.assign({},DEF,JSON.parse(localStorage.getItem('aprozar_v2')||'{}'));}catch(e){state=JSON.parse(JSON.stringify(DEF));}
 function save(){localStorage.setItem('aprozar_v2',JSON.stringify(state));}
-let adIdx=0, openHist=null, sugOn=false;
+let adIdx=0, openHist=null;
 /* ---------- HELPERS ---------- */
 const $=s=>document.querySelector(s);
 const lei=v=>v.toFixed(2).replace('.',',')+' lei';
@@ -152,7 +155,8 @@ function adHTML(){
 }
 setInterval(()=>{adIdx++;const el=$('#adslot');if(el)el.outerHTML=`<div id="adslot">${adHTML()}</div>`;},Math.max(3,state.adInterval)*1000);
 /* ---------- COMPONENTE ---------- */
-function searchHTML(){return `<div class="searchbox"><input id="q" placeholder="Produse, producători sau ferme..." oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter'){sugOn=false;go('acasa',{t:'rez',q:this.value})}"><div class="sugg" id="sugg" style="display:none"></div></div>`;}
+function headerHTML(){return `<header><img class="logoimg" src="logo.png" alt="" onerror="this.style.display='none'"><div class="logo">APROZAR ROMÂNESC</div></header>`;}
+function searchHTML(){return `<div class="searchbox"><input id="q" placeholder="Produse, producători sau ferme..." oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter'){go('acasa',{t:'rez',q:this.value})}"><div class="sugg" id="sugg" style="display:none"></div></div>`;}
 function onSearch(v){
  const s=$('#sugg');if(!s)return;
  if(!v){s.style.display='none';return;}
@@ -161,8 +165,8 @@ function onSearch(v){
  const fe=PRODUCERS.filter(p=>p.name.toLowerCase().includes(q)).slice(0,3);
  if(!pr.length&&!fe.length){s.style.display='none';return;}
  s.style.display='block';
- s.innerHTML=pr.map(p=>`<div onclick="sugOn=false;go('acasa',{t:'produs',id:'${p.id}'})">${p.img} ${p.name} · <small>${lei(p.price)}/${p.unit}</small></div>`).join('')+
-   fe.map(f=>`<div onclick="sugOn=false;go('acasa',{t:'ferma',id:'${f.id}'})">${f.av} ${f.name} · <small>${f.loc}</small></div>`).join('');
+ s.innerHTML=pr.map(p=>`<div onclick="go('acasa',{t:'produs',id:'${p.id}'})">${p.img} ${p.name} · <small>${lei(p.price)}/${p.unit}</small></div>`).join('')+
+   fe.map(f=>`<div onclick="go('acasa',{t:'ferma',id:'${f.id}'})">${f.av} ${f.name} · <small>${f.loc}</small></div>`).join('');
 }
 function catsHTML(sel){return `<div class="cats"><span class="${(!sel||sel==='Toate')?'on':''}" onclick="go('acasa',{t:'rez',cat:'Toate'})">Toate</span>${CATS.map(c=>`<span class="${sel===c?'on':''}" onclick="go('acasa',{t:'rez',cat:'${c}'})">${c}</span>`).join('')}</div>`;}
 function pcardHTML(f){return `<div class="pcard" onclick="go('acasa',{t:'ferma',id:'${f.id}'})">
@@ -179,6 +183,7 @@ function prodrowHTML(p,quick){const q=state.cart[p.id]||0;return `<div class="pr
   <div class="right"><div class="price">${lei(p.price)}/${p.unit}</div>
   <div class="qty"><button onclick="event.stopPropagation();addQty('${p.id}',-1)">−</button><span>${q?q+(p.unit==='kg'?' kg':' buc'):''}</span><button onclick="event.stopPropagation();addQty('${p.id}',1)">+</button></div></div></div>`;}
 function stickyHTML(){const t=cartTotal();if(t<=0)return'';return `<div class="sticky-total" onclick="go('cos')"><span>🛒 ${cartCount()} produse</span><span>Total: ${lei(t)} → Vezi coșul</span></div>`;}
+function adSlot(){return `<div id="adslot">${adHTML()}</div>`;}
 /* ---------- VIEWS ---------- */
 function vAcasa(){
  const last=state.history[0];
@@ -193,13 +198,12 @@ function vAcasa(){
  <h2 class="sec">Poveștile fermierilor <a>Vezi toate ›</a></h2>
  <div class="hscroll">${STORIES.map(s=>`<div class="story" onclick="go('acasa',{t:'ferma',id:'${s.p}'})"><small>${ferm(s.p).name}</small><b>${s.t}</b><br><small>${s.txt}</small></div>`).join('')}</div>`;
 }
-function adSlot(){return `<div id="adslot">${adHTML()}</div>`;}
 function vRez(sub){
  let list=PRODUCTS.slice();
  if(sub.cat&&sub.cat!=='Toate')list=list.filter(p=>p.cat===sub.cat);
  if(sub.q){const q=sub.q.toLowerCase();list=list.filter(p=>p.name.toLowerCase().includes(q)||ferm(p.p).name.toLowerCase().includes(q));}
  return adSlot()+searchHTML()+catsHTML(sub.cat)+`<h2 class="sec">Rezultate (${list.length})</h2>`+(list.length?list.map(p=>prodrowHTML(p)).join(''):`<div class="empty">Nimic găsit.</div>`);}
-function vFerme(){return adSlot()+`<h2 class="sec">Toți producătorii (după distanță)</h2><div class="hscroll" style="flex-wrap:wrap">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>`;}
+function vFerme(){return adSlot()+`<h2 class="sec">Toți producătorii (după distanță)</h2><div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>`;}
 function vFerma(id){const f=ferm(id);const revs=state.reviews[id]||[];
  return adSlot()+`<div class="cover-big" style="background:${f.cover}">${f.av}</div><div class="av-big">${f.av}</div>
  <div style="padding:0 14px"><h2 style="margin:6px 0">${f.verified?'✅ ':''}${f.name} <button class="heart" style="position:static" onclick="toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button></h2>
@@ -272,7 +276,7 @@ function render(){
  else if(state.tab==='favorite')html=vFav();
  else if(state.tab==='mesaje')html=vMesaje();
  else html=vCont();
- $('#app').innerHTML=(state.tab!=='acasa'||!sub?stickyHTML():'')+html;
+ $('#app').innerHTML=headerHTML()+(state.tab!=='acasa'||!sub?stickyHTML():'')+html;
  $('#nav').innerHTML=[['acasa','🏠','Acasă'],['mesaje','💬','Mesaje'],['favorite','❤️','Favorite'],['cos','🛒','Coș'],['cont','👤','Cont']].map(n=>`<a class="${state.tab===n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}</a>`).join('');
 }
 render();
