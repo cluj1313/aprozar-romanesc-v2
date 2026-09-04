@@ -4,29 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aprozar Românesc</title>
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1b5e20">
 <style>
-:root{--g:#1b5e20;--g2:#2e7d32;--gl:#e8f5e9;--ink:#1c2430;--mut:#6b7280;--bg:#f7f7f5;--red:#d92643;--yel:#f5c400;}
+:root{--g:#1b5e20;--g2:#2e7d32;--gl:#e8f5e9;--ink:#1c2430;--mut:#6b7280;--bg:#f7f7f5;--red:#d92643;--yel:#ffd000;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px;}
 .wrap{max-width:480px;margin:0 auto;padding:10px 12px;}
 @media(min-width:500px){.wrap{box-shadow:0 0 24px rgba(0,0,0,.10);min-height:100vh;background:#fcfcfa;}}
 header{display:flex;align-items:center;gap:10px;padding:6px 0;}
 header .logo{font-weight:900;color:var(--g);font-size:1.1rem;white-space:nowrap;}
-header .logoimg{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#fff;}
+header .logoimg{width:46px;height:46px;object-fit:contain;}
 .searchbox{position:relative;flex:1;}
-.searchbox input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #ddd;font-size:.9rem;}
+.searchbox input{width:100%;padding:10px 12px;border-radius:999px;border:1px solid #ddd;font-size:.9rem;}
 .sugg{position:absolute;top:44px;left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:12px;z-index:30;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.12);}
-.sugg div{padding:9px 12px;font-size:.85rem;cursor:pointer;border-bottom:1px solid #f0f0f0;}
+.sugg div{padding:9px 12px;font-size:.85rem;cursor:pointer;border-bottom:1px solid #f0f0f0;display:flex;gap:8px;align-items:center;}
 .sugg div:hover{background:var(--gl);}
-.adbar{position:relative;border-radius:14px;color:#fff;padding:12px 14px;margin:8px 0;background:linear-gradient(90deg,#26160f,#4e342e 30%,#3e2723 60%,#26160f);overflow:hidden;}
-.adbar .badge{position:absolute;top:8px;right:8px;background:var(--red);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:1px;}
-.adbar h3{font-style:italic;font-size:1.05rem;}
-.adbar p{font-size:.72rem;opacity:.9;margin:2px 0 8px;}
-.adbar .btns{display:flex;gap:8px;flex-wrap:wrap;}
+.sugg img{width:28px;height:28px;border-radius:6px;object-fit:cover;}
 .btn{border:none;border-radius:999px;padding:9px 14px;font-weight:700;font-size:.78rem;cursor:pointer;}
 .btn.y{background:var(--yel);color:#1a1a1a;}
 .btn.g{background:var(--g2);color:#fff;}
@@ -36,9 +32,10 @@ header .logoimg{width:42px;height:42px;border-radius:50%;object-fit:cover;backgr
 .cats span.on{background:var(--g);color:#fff;border-color:var(--g);}
 .hscroll{display:flex;gap:10px;overflow-x:auto;padding:6px 0 10px;scroll-snap-type:x mandatory;}
 .hscroll::-webkit-scrollbar{display:none;}
-.pcard{flex:0 0 210px;scroll-snap-align:start;background:#fff;border:1px solid #e5e5e5;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;}
-.pcard .cover{height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;}
-.pcard .pav{position:absolute;top:92px;left:12px;width:44px;height:44px;border-radius:50%;background:#fff;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 6px rgba(0,0,0,.2);}
+.pcard{flex:0 0 200px;scroll-snap-align:start;background:#fff;border:1px solid #e5e5e5;border-radius:14px;overflow:hidden;position:relative;cursor:pointer;}
+.pcard .cover{height:120px;width:100%;object-fit:cover;object-position:top;}
+.pcard .pav{position:absolute;top:102px;left:12px;width:44px;height:44px;border-radius:50%;background:#fff;border:3px solid #fff;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,.2);}
+.pcard .ver{position:absolute;top:108px;right:10px;background:var(--g2);color:#fff;border-radius:50%;width:20px;height:20px;font-size:.65rem;display:flex;align-items:center;justify-content:center;}
 .pcard .body{padding:26px 12px 12px;}
 .pcard h4{font-size:.88rem;}
 .pcard .meta{font-size:.7rem;color:var(--mut);margin:2px 0;}
@@ -46,7 +43,7 @@ header .logoimg{width:42px;height:42px;border-radius:50%;object-fit:cover;backgr
 .heart{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:30px;height:30px;font-size:.9rem;cursor:pointer;z-index:5;}
 .anunt{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:7px 10px;font-size:.75rem;margin:6px 0;}
 .prodrow{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:10px;margin:8px 0;position:relative;}
-.prodrow .img{width:52px;height:52px;border-radius:10px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:28px;flex:0 0 auto;}
+.prodrow .img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:0 0 auto;}
 .prodrow .info{flex:1;min-width:0;}
 .prodrow .info b{font-size:.85rem;display:block;}
 .prodrow .info small{color:var(--mut);font-size:.7rem;}
@@ -58,16 +55,18 @@ header .logoimg{width:42px;height:42px;border-radius:50%;object-fit:cover;backgr
 .sticky-total{position:sticky;top:0;z-index:40;background:var(--g);color:#fff;border-radius:0 0 14px 14px;padding:8px 14px;display:flex;justify-content:space-between;font-size:.85rem;font-weight:700;cursor:pointer;}
 h2.sec{font-size:.95rem;margin:14px 0 6px;display:flex;justify-content:space-between;align-items:center;}
 h2.sec a{font-size:.72rem;color:var(--g2);cursor:pointer;}
-.story{flex:0 0 240px;background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:12px;scroll-snap-align:start;cursor:pointer;}
-.story b{font-size:.82rem;color:var(--g);}
-.story small{color:var(--mut);font-size:.7rem;}
+.story{flex:0 0 200px;background:#fff;border:1px solid #e5e5e5;border-radius:14px;overflow:hidden;scroll-snap-align:start;cursor:pointer;}
+.story img{width:100%;height:110px;object-fit:cover;}
+.story .sb{padding:8px 10px;}
+.story b{font-size:.8rem;color:var(--ink);display:block;}
+.story small{color:var(--g2);font-size:.68rem;}
 nav.bottom{position:fixed;bottom:0;left:0;right:0;margin:0 auto;max-width:480px;background:var(--g);display:flex;z-index:50;}
 nav.bottom a{flex:1;text-align:center;color:#c8e6c9;font-size:.62rem;padding:8px 0;cursor:pointer;}
 nav.bottom a.on{color:#fff;font-weight:700;}
 nav.bottom a span{display:block;font-size:1.1rem;}
 .card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:14px;margin:10px 0;}
-.cover-big{height:150px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:64px;}
-.av-big{width:74px;height:74px;border-radius:50%;background:#fff;border:4px solid #fff;margin-top:-38px;margin-left:14px;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.cover-big{height:180px;border-radius:14px;object-fit:cover;object-position:top;width:100%;}
+.av-big{width:74px;height:74px;border-radius:50%;background:#fff;border:4px solid #fff;margin-top:-38px;margin-left:14px;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,.25);}
 .rev{background:var(--gl);border-radius:10px;padding:8px 10px;margin:6px 0;font-size:.78rem;}
 .rev .rep{background:#fff;border-left:3px solid var(--g2);margin-top:6px;padding:6px 8px;border-radius:6px;font-size:.72rem;}
 .hist{background:#fff;border:1px solid #e5e5e5;border-radius:12px;margin:8px 0;overflow:hidden;}
@@ -82,6 +81,16 @@ nav.bottom a span{display:block;font-size:1.1rem;}
 .msg{margin:4px 0;padding:8px 10px;border-radius:12px;font-size:.8rem;max-width:80%;}
 .msg.me{background:var(--g2);color:#fff;margin-left:auto;}
 .msg.them{background:var(--gl);}
+.adwrap{margin:12px 0;position:relative;}
+.adwrap .badge{position:absolute;top:8px;right:8px;background:var(--red);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:1px;z-index:2;}
+.adwrap img.main{width:100%;height:110px;object-fit:cover;border-radius:14px;cursor:pointer;}
+.dorbox{border-radius:14px;overflow:hidden;background:#201a14;color:#fff;position:relative;}
+.dorbox img.bg{width:100%;height:90px;object-fit:cover;}
+.dorbox .in{padding:10px 14px;}
+.dorbox h3{font-style:italic;font-family:Georgia,serif;font-size:1.05rem;}
+.dorbox p{font-size:.72rem;opacity:.9;margin:2px 0 8px;}
+.dorbox .btns{display:flex;gap:8px;flex-wrap:wrap;}
+.dorbox .logo{position:absolute;top:10px;left:12px;width:40px;height:40px;object-fit:contain;background:rgba(255,255,255,.9);border-radius:50%;padding:4px;}
 </style>
 </head>
 <body>
@@ -91,30 +100,45 @@ nav.bottom a span{display:block;font-size:1.1rem;}
 /* ---------- DATE ---------- */
 const CATS=['Fructe','Legume','Cartofi și ceapă','Lactate','Cereale','Panificație','Miere și dulciuri','Dulcețuri','Carne și ouă','Pește','Conserve și murături','Băuturi naturale','Plante și ceaiuri','Altele'];
 const PRODUCERS=[
- {id:'p1',name:'Grădina lui Nelu',loc:'Săcueni, Bihor',km:2.1,rating:4.9,rev:87,verified:true,cover:'linear-gradient(135deg,#2e7d32,#81c784)',av:'👨🌾',anunt:''},
- {id:'p2',name:'Legume de la Mama',loc:'Vultureni, Cluj',km:3.4,rating:4.8,rev:64,verified:true,cover:'linear-gradient(135deg,#33691e,#aed581)',av:'👩‍🌾',anunt:'🌞 Reducere 10% la roșii până vineri!'},
- {id:'p3',name:'Ferma Dâmbovița',loc:'Găești, Dâmbovița',km:4.8,rating:4.7,rev:53,verified:true,cover:'linear-gradient(135deg,#4e342e,#a1887f)',av:'🧑‍',anunt:''},
- {id:'p4',name:'Livada Moise',loc:'Odobești, Vrancea',km:6.2,rating:4.8,rev:41,verified:true,cover:'linear-gradient(135deg,#1b5e20,#a5d6a7)',av:'👩‍',anunt:'🚗 Plecat din localitate până marți.'},
- {id:'p5',name:'Stupina Vasile',loc:'Fetești, Ialomița',km:7.5,rating:4.9,rev:38,verified:true,cover:'linear-gradient(135deg,#e65100,#ffcc80)',av:'👨‍🌾',anunt:'🏖️ În concediu 10–20 ale lunii.'}
+ {id:'p1',name:'Grădina lui Nelu',loc:'Săcueni, Bihor',km:2.1,rating:4.9,rev:87,verified:true,img:'nelu.jpg',anunt:''},
+ {id:'p2',name:'Legume de la Mama',loc:'Vultureni, Cluj',km:3.4,rating:4.8,rev:64,verified:true,img:'mama.jpg',anunt:'🌞 Reducere 10% la roșii până vineri!'},
+ {id:'p3',name:'Ferma Dâmbovița',loc:'Găești, Dâmbovița',km:4.8,rating:4.7,rev:53,verified:true,img:'marin.jpg',anunt:''},
+ {id:'p4',name:'Livada Moise',loc:'Odobești, Vrancea',km:6.2,rating:4.8,rev:41,verified:true,img:'livada.jpg',anunt:'🚗 Plecat din localitate până marți.'},
+ {id:'p5',name:'Stupina Vasile',loc:'Fetești, Ialomița',km:7.5,rating:4.9,rev:38,verified:true,img:'stupina.jpg',anunt:'🏖️ În concediu 10–20 ale lunii.'}
 ];
 const PRODUCTS=[
- {id:'rosii',p:'p1',name:'Roșii Inimă de Bou',price:12.5,unit:'kg',cat:'Legume',img:'🍅',season:true,desc:'Soi țărănesc inimă de bou, cules copt.'},
- {id:'capsuni',p:'p1',name:'Căpșuni',price:18,unit:'kg',cat:'Fructe',img:'🍓',season:true,desc:'Rânduri mici, fără forțaj.'},
- {id:'cas',p:'p3',name:'Caș afumat',price:28,unit:'kg',cat:'Lactate',img:'🧀',season:false,desc:'Afumat lent, rețetă de familie.'},
- {id:'cartofi',p:'p2',name:'Cartofi roșii',price:7.6,unit:'kg',cat:'Cartofi și ceapă',img:'🥔',season:false,desc:'Copți în sol nisipos.'},
- {id:'morcovi',p:'p2',name:'Morcovi',price:4.2,unit:'kg',cat:'Legume',img:'🥕',season:false,desc:'Dulci, buni și cruzi.'},
- {id:'mere',p:'p4',name:'Mere de deal',price:6.5,unit:'kg',cat:'Fructe',img:'🍎',season:true,desc:'Din livada de pe deal.'},
- {id:'prune',p:'p4',name:'Prune',price:8,unit:'kg',cat:'Fructe',img:'🍑',season:true,desc:'Bune și pentru țuică.'},
- {id:'miere',p:'p5',name:'Miere de tei',price:45,unit:'kg',cat:'Miere și dulciuri',img:'🍯',season:false,desc:'Cules la Fetești.'},
- {id:'oua',p:'p3',name:'Ouă de găină',price:1.4,unit:'buc',cat:'Carne și ouă',img:'🥚',season:false,desc:'De la găini crescute în curte.'},
- {id:'paine',p:'p2',name:'Pâine pe vatră',price:9,unit:'buc',cat:'Panificație',img:'🍞',season:false,desc:'Frământată manual.'}
+ {id:'rosii-inima',p:'p1',name:'Roșii de inimă',price:12.5,unit:'kg',cat:'Legume',img:'rosii-inima.jpg',season:true,desc:'Nelu le culege când crapă ușor la umăr.'},
+ {id:'rosii',p:'p1',name:'Roșii de câmp',price:10,unit:'kg',cat:'Legume',img:'rosii.jpg',season:true,desc:'Coapte, dulci, bune de salată.'},
+ {id:'ardei',p:'p1',name:'Ardei grași',price:14,unit:'kg',cat:'Legume',img:'ardei.jpg',season:true,desc:'Cărnoși, crescuți în solar.'},
+ {id:'castraveti',p:'p1',name:'Castraveți',price:9,unit:'kg',cat:'Legume',img:'castraveti.jpg',season:true,desc:'Crocanți, buni și de murat.'},
+ {id:'vinete',p:'p1',name:'Vinete',price:8,unit:'kg',cat:'Legume',img:'vinete.jpg',season:true,desc:'Pentru zacuscă și tocăniță.'},
+ {id:'capsuni',p:'p1',name:'Căpșuni',price:18,unit:'kg',cat:'Fructe',img:'capsuni.jpg',season:true,desc:'Rânduri mici, fără forțaj.'},
+ {id:'pepene',p:'p1',name:'Pepene roșu',price:3.5,unit:'kg',cat:'Fructe',img:'pepene.jpg',season:true,desc:'Dulce, crescut pe nisip.'},
+ {id:'cartofi-rosii',p:'p2',name:'Cartofi roșii',price:7.6,unit:'kg',cat:'Cartofi și ceapă',img:'cartofi-rosii.jpg',season:false,desc:'Copți în sol nisipos.'},
+ {id:'ceapa',p:'p2',name:'Ceapă roșie',price:6,unit:'kg',cat:'Cartofi și ceapă',img:'ceapa.jpg',season:false,desc:'Dulce, bună și crudă.'},
+ {id:'morcovi',p:'p2',name:'Morcovi',price:4.2,unit:'kg',cat:'Legume',img:'morcovi.jpg',season:false,desc:'Dulci, buni și cruzi.'},
+ {id:'gogonele',p:'p2',name:'Gogonele',price:5.5,unit:'kg',cat:'Legume',img:'gogonele.jpg',season:true,desc:'Pentru murături de iarnă.'},
+ {id:'zacusca',p:'p2',name:'Zacuscă de casă',price:18,unit:'buc',cat:'Conserve și murături',img:'zacusca.jpg',season:false,desc:'Rețeta bunicii, în borcan.'},
+ {id:'paine',p:'p2',name:'Pâine pe vatră',price:9,unit:'buc',cat:'Panificație',img:'paine.jpg',season:false,desc:'Frământată manual.'},
+ {id:'malai',p:'p2',name:'Mălai',price:8,unit:'kg',cat:'Cereale',img:'malai.jpg',season:false,desc:'Măcinat la moară de piatră.'},
+ {id:'cas-afumat',p:'p3',name:'Caș afumat',price:28,unit:'kg',cat:'Lactate',img:'cas-afumat.jpg',season:false,desc:'Afumat lent, rețetă de familie.'},
+ {id:'telemea',p:'p3',name:'Telemea',price:32,unit:'kg',cat:'Lactate',img:'telemea.jpg',season:false,desc:'Din lapte de oaie.'},
+ {id:'cascaval',p:'p3',name:'Cașcaval',price:38,unit:'kg',cat:'Lactate',img:'cascaval.jpg',season:false,desc:'Maturat 60 de zile.'},
+ {id:'oua',p:'p3',name:'Ouă de găină',price:1.4,unit:'buc',cat:'Carne și ouă',img:'oua.jpg',season:false,desc:'De la găini crescute în curte.'},
+ {id:'placinta',p:'p3',name:'Plăcintă cu brânză',price:25,unit:'buc',cat:'Panificație',img:'placinta.jpg',season:false,desc:'Coaptă pe vatră.'},
+ {id:'mere',p:'p4',name:'Mere de deal',price:6.5,unit:'kg',cat:'Fructe',img:'mere.jpg',season:true,desc:'Din livada de pe deal.'},
+ {id:'pere',p:'p4',name:'Pere',price:7.5,unit:'kg',cat:'Fructe',img:'pere.jpg',season:true,desc:'Zemoase și parfumate.'},
+ {id:'piersici',p:'p4',name:'Piersici',price:11,unit:'kg',cat:'Fructe',img:'piersici.jpg',season:true,desc:'Coapte în copac.'},
+ {id:'prune',p:'p4',name:'Prune',price:8,unit:'kg',cat:'Fructe',img:'prune.jpg',season:true,desc:'Bune și pentru țuică.'},
+ {id:'miere',p:'p5',name:'Miere de tei',price:45,unit:'kg',cat:'Miere și dulciuri',img:'miere.jpg',season:false,desc:'Cules la Fetești.'},
+ {id:'dulceata',p:'p5',name:'Dulceață de căpșuni',price:18,unit:'buc',cat:'Dulcețuri',img:'dulceata.jpg',season:false,desc:'Fără conservanți.'}
 ];
 const STORIES=[
- {p:'p3',t:'Povestea lui Marin',txt:'De la 3 vaci la o fermă respectată.'},
- {p:'p1',t:'Roșiile Inimă de Bou ale lui Nelu',txt:'Secretul: pământ viu, fără grabă.'},
- {p:'p2',t:'Masa Ioanei',txt:'Legume care chiar au gust.'},
- {p:'p4',t:'Merele de pe deal',txt:'O livadă sădită în 1998.'},
- {p:'p5',t:'Teiul din Fetești',txt:'Mierea care se cristalează firesc.'}
+ {p:'p3',t:'Povestea lui Marin',txt:'De la 3 vaci la o fermă respectată.',img:'marin-story.jpg'},
+ {p:'p1',t:'Roșiile de inimă ale lui Nelu',txt:'Secretul: pământ viu, fără grabă.',img:'nelu.jpg'},
+ {p:'p2',t:'Masa Ioanei',txt:'Legume care chiar au gust.',img:'mama.jpg'},
+ {p:'p4',t:'Merele de pe deal',txt:'O livadă sădită în 1998.',img:'livada.jpg'},
+ {p:'p5',t:'Teiul din Fetești',txt:'Mierea care se cristalează firesc.',img:'stupina.jpg'}
 ];
 const STORES=[
  {name:'Dor de Casă Gherla',loc:'Gherla',km:1.2},
@@ -143,24 +167,24 @@ function addQty(id,d){const st=prod(id).unit==='kg'?0.5:1;state.cart[id]=Math.ma
 function toggleFavP(id){const i=state.favP.indexOf(id);i<0?state.favP.push(id):state.favP.splice(i,1);save();render();}
 function toggleFavPr(id){const i=state.favPr.indexOf(id);i<0?state.favPr.push(id):state.favPr.splice(i,1);save();render();}
 function go(tab,sub){state.tab=tab;state.sub=sub||null;openHist=null;save();render();window.scrollTo(0,0);}
-/* ---------- RECLAME (JOS, rotative) ---------- */
+/* ---------- RECLAME JOS ---------- */
 const ADS=[
+ {kind:'img',src:'reclama1.png',href:'https://aprozar-romanesc3.grok.me/'},
  {kind:'img',src:'reclama2.png',href:'https://aprozar-romanesc3.grok.me/'},
  {kind:'img',src:'reclama3.png',href:'https://aprozar-romanesc3.grok.me/'},
- {kind:'img',src:'reclama1.png',href:'https://aprozar-romanesc3.grok.me/'},
  {kind:'dor'},
  {kind:'serv'}
 ];
 function adBottomHTML(){
  if(!state.adsOn)return '<div id="adslot"></div>';
  const a=ADS[adIdx%ADS.length];
- if(a.kind==='img')return `<div id="adslot" style="margin:12px 0"><img src="${a.src}" onerror="this.style.display='none'" onclick="window.open('${a.href}')" style="width:100%;height:110px;object-fit:cover;border-radius:14px;cursor:pointer"></div>`;
- if(a.kind==='dor')return `<div id="adslot"><div class="adbar"><span class="badge">${state.badges.dor||'SPONSOR'}</span><h3>Dor de Casă</h3><p>Lanțul de magazine Călin Donca · 300+ magazine în toată România.</p><div class="btns"><button class="btn y" onclick="go('acasa',{t:'stores'})">Cel mai apropiat magazin</button><button class="btn g" onclick="go('acasa',{t:'stores'})">Toate magazinele</button></div></div></div>`;
- return `<div id="adslot"><div class="adbar" style="background:linear-gradient(90deg,#0f1729,#1a2b4a)"><span class="badge">${state.badges.serv||'PARTENER'}</span><h3>Servicii Locale</h3><p>Electricieni, instalatori, zugravi — verificați, lângă tine.</p><div class="btns"><button class="btn y" onclick="window.open('https://serviciilocale.netlify.app/')">Vezi meseriașii</button></div></div></div>`;
+ if(a.kind==='img')return `<div id="adslot" class="adwrap"><img class="main" src="${a.src}" onerror="this.style.display='none'" onclick="window.open('${a.href}')"></div>`;
+ if(a.kind==='dor')return `<div id="adslot" class="adwrap"><span class="badge">${state.badges.dor||'SPONSOR'}</span><div class="dorbox"><img class="logo" src="dor-logo.png"><img class="bg" src="dor-banner.jpg"><div class="in"><h3>Dor de Casă</h3><p>Lanțul de magazine Călin Donca · <b>300+ magazine</b> în toată România.</p><div class="btns"><button class="btn y" onclick="go('acasa',{t:'stores'})">Cel mai apropiat magazin</button><button class="btn g" onclick="go('acasa',{t:'stores'})">Toate magazinele</button></div></div></div></div>`;
+ return `<div id="adslot" class="adwrap"><span class="badge">${state.badges.serv||'PARTENER'}</span><div class="dorbox" style="background:linear-gradient(90deg,#0f1729,#1a2b4a)"><img class="logo" src="servicii-locale-logo.png"><img class="bg" src="servicii-locale-map.jpg" style="opacity:.5"><div class="in"><h3 style="font-family:inherit;font-style:normal">Servicii Locale</h3><p>Electricieni, instalatori, zugravi — verificați, lângă tine.</p><div class="btns"><button class="btn y" onclick="window.open('https://serviciilocale.netlify.app/')">Vezi meseriașii</button></div></div></div></div>`;
 }
 setInterval(()=>{adIdx++;const el=$('#adslot');if(el)el.outerHTML=adBottomHTML();},Math.max(3,state.adInterval)*1000);
 /* ---------- COMPONENTE ---------- */
-function headerHTML(){return `<header><img class="logoimg" src="logo.png" alt="" onerror="this.style.display='none'"><div class="logo">APROZAR ROMÂNESC</div></header>`;}
+function headerHTML(){return `<header><img class="logoimg" src="brand-logo.png" alt="" onerror="this.style.display='none'"><div class="logo">APROZAR ROMÂNESC</div></header>`;}
 function searchHTML(){return `<div class="searchbox"><input id="q" placeholder="Produse, producători sau ferme..." oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter'){go('acasa',{t:'rez',q:this.value})}"><div class="sugg" id="sugg" style="display:none"></div></div>`;}
 function onSearch(v){
  const s=$('#sugg');if(!s)return;
@@ -170,20 +194,21 @@ function onSearch(v){
  const fe=PRODUCERS.filter(p=>p.name.toLowerCase().includes(q)).slice(0,3);
  if(!pr.length&&!fe.length){s.style.display='none';return;}
  s.style.display='block';
- s.innerHTML=pr.map(p=>`<div onclick="go('acasa',{t:'produs',id:'${p.id}'})">${p.img} ${p.name} · <small>${lei(p.price)}/${p.unit}</small></div>`).join('')+
-   fe.map(f=>`<div onclick="go('acasa',{t:'ferma',id:'${f.id}'})">${f.av} ${f.name} · <small>${f.loc}</small></div>`).join('');
+ s.innerHTML=pr.map(p=>`<div onclick="go('acasa',{t:'produs',id:'${p.id}'})"><img src="${p.img}"> ${p.name} · <small>${lei(p.price)}/${p.unit}</small></div>`).join('')+
+   fe.map(f=>`<div onclick="go('acasa',{t:'ferma',id:'${f.id}'})"><img src="${f.img}" style="border-radius:50%"> ${f.name} · <small>${f.loc}</small></div>`).join('');
 }
 function catsHTML(sel){return `<div class="cats"><span class="${(!sel||sel==='Toate')?'on':''}" onclick="go('acasa',{t:'rez',cat:'Toate'})">Toate</span>${CATS.map(c=>`<span class="${sel===c?'on':''}" onclick="go('acasa',{t:'rez',cat:'${c}'})">${c}</span>`).join('')}</div>`;}
 function pcardHTML(f){return `<div class="pcard" onclick="go('acasa',{t:'ferma',id:'${f.id}'})">
   <button class="heart" onclick="event.stopPropagation();toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button>
-  <div class="cover" style="background:${f.cover}">${f.av}</div>
-  <div class="pav">${f.av}</div>
-  <div class="body"><h4>${isVerif(f.id)?'✅ ':''}${f.name}</h4><div class="meta">${f.loc}</div>
+  <img class="cover" src="${f.img}">
+  <img class="pav" src="${f.img}">
+  ${isVerif(f.id)?'<span class="ver">✓</span>':''}
+  <div class="body"><h4>${f.name}</h4><div class="meta">${f.loc}</div>
   <div class="stars">★ ${f.rating} (${f.rev}) · 📍 ${f.km} km</div></div></div>`;}
 function prodrowHTML(p,quick){const q=state.cart[p.id]||0;return `<div class="prodrow" ${quick?'':`onclick="go('acasa',{t:'produs',id:'${p.id}'})"`}>
   ${p.season?'<span class="season">ÎN SEZON</span>':''}
   <button class="heart" onclick="event.stopPropagation();toggleFavPr('${p.id}')">${state.favPr.includes(p.id)?'❤️':'🤍'}</button>
-  <div class="img">${p.img}</div>
+  <img class="img" src="${p.img}">
   <div class="info"><b>${p.name}</b><small>${ferm(p.p).name}</small></div>
   <div class="right"><div class="price">${lei(p.price)}/${p.unit}</div>
   <div class="qty"><button onclick="event.stopPropagation();addQty('${p.id}',-1)">−</button><span>${q?q+(p.unit==='kg'?' kg':' buc'):''}</span><button onclick="event.stopPropagation();addQty('${p.id}',1)">+</button></div></div></div>`;}
@@ -200,7 +225,7 @@ function vAcasa(){
  <p style="font-size:.7rem;color:var(--mut);margin-bottom:4px">${last?'Reia rapid din comanda din '+last.date:'Produse de sezon, aproape de tine'}:</p>
  ${quick.map(p=>prodrowHTML(p,true)).join('')}
  <h2 class="sec">Poveștile fermierilor <a>Vezi toate ›</a></h2>
- <div class="hscroll">${STORIES.map(s=>`<div class="story" onclick="go('acasa',{t:'ferma',id:'${s.p}'})"><small>${ferm(s.p).name}</small><b>${s.t}</b><br><small>${s.txt}</small></div>`).join('')}</div>`;
+ <div class="hscroll">${STORIES.map(s=>`<div class="story" onclick="go('acasa',{t:'ferma',id:'${s.p}'})"><img src="${s.img}"><div class="sb"><small>${ferm(s.p).name}</small><b>${s.t}</b></div></div>`).join('')}</div>`;
 }
 function vRez(sub){
  let list=allProducts().slice();
@@ -209,8 +234,8 @@ function vRez(sub){
  return searchHTML()+catsHTML(sub.cat)+`<h2 class="sec">Rezultate (${list.length})</h2>`+(list.length?list.map(p=>prodrowHTML(p)).join(''):`<div class="empty">Nimic găsit.</div>`);}
 function vFerme(){return `<h2 class="sec">Toți producătorii (după distanță)</h2><div class="hscroll">${PRODUCERS.slice().sort((a,b)=>a.km-b.km).map(pcardHTML).join('')}</div>`;}
 function vFerma(id){const f=ferm(id);const revs=state.reviews[id]||[];const an=anuntOf(id);
- return `<div class="cover-big" style="background:${f.cover}">${f.av}</div><div class="av-big">${f.av}</div>
- <div style="padding:0 14px"><h2 style="margin:6px 0">${isVerif(id)?'✅ ':''}${f.name} <button class="heart" style="position:static" onclick="toggleFavP('${f.id}')">${state.favP.includes(f.id)?'❤️':'🤍'}</button></h2>
+ return `<img class="cover-big" src="${f.img}"><img class="av-big" src="${f.img}">
+ <div style="padding:0 14px"><h2 style="margin:6px 0">${isVerif(id)?'✅ ':''}${f.name} <button class="heart" style="position:static" onclick="toggleFavP('${id}')">${state.favP.includes(id)?'❤️':'🤍'}</button></h2>
  <div style="color:var(--mut);font-size:.8rem">${f.loc} · 📍 ${f.km} km · <span class="stars">★ ${f.rating} (${f.rev} recenzii)</span></div></div>
  ${an?`<div class="anunt" style="margin:10px 14px">📢 ${an}</div>`:''}
  <div style="padding:0 12px">${allProducts().filter(p=>p.p===id).map(p=>prodrowHTML(p)).join('')||'<div class="empty">Niciun produs.</div>'}
@@ -221,7 +246,7 @@ function vFerma(id){const f=ferm(id);const revs=state.reviews[id]||[];const an=a
 function addReview(id){const u=prompt('Numele tău:');if(!u)return;const r=prompt('Nota (1-5):','5');const t=prompt('Review-ul tău:');if(!t)return;(state.reviews[id]=state.reviews[id]||[]).unshift({u,r:Math.max(1,Math.min(5,+r||5)),t,rep:[]});save();render();}
 function replyReview(id,i){const t=prompt('Răspunsul tău (ca producător):');if(!t)return;(state.reviews[id][i].rep).push({by:'Răspuns producător',t});save();render();}
 function vProdus(id){const p=prod(id);const q=state.cart[id]||0;const same=allProducts().filter(x=>x.p===p.p&&x.id!==id);
- return `<div class="cover-big" style="background:var(--gl)">${p.img}</div>
+ return `<img class="cover-big" src="${p.img}">
  <div style="padding:10px 14px"><small style="color:var(--mut)">Produse / ${p.cat}</small><h2>${p.name}</h2>
  <div style="color:var(--g2);font-size:.85rem;margin:4px 0;cursor:pointer" onclick="go('acasa',{t:'ferma',id:'${p.p}'})">${ferm(p.p).name} · ${ferm(p.p).loc}</div>
  <p style="font-size:.8rem;color:var(--mut)">${p.desc}</p>
@@ -233,7 +258,7 @@ function vProdus(id){const p=prod(id);const q=state.cart[id]||0;const same=allPr
  ${same.length?`<h2 class="sec">De la același loc</h2>`+same.map(x=>prodrowHTML(x)).join(''):''}</div>`;}
 function vStores(){const s=STORES.slice().sort((a,b)=>a.km-b.km);
  return `<div class="card"><h2>🏪 Cel mai apropiat magazin</h2><p style="font-size:.9rem;font-weight:800;color:var(--g)">${s[0].name}</p><small style="color:var(--mut)">${s[0].loc} · 📍 ${s[0].km} km</small></div>
- <h2 class="sec">Toate magazinele (după distanță)</h2>${s.map(x=>`<div class="prodrow"><div class="img">🏪</div><div class="info"><b>${x.name}</b><small>${x.loc}</small></div><div class="right"><b>${x.km} km</b></div></div>`).join('')}`;}
+ <h2 class="sec">Toate magazinele (după distanță)</h2>${s.map(x=>`<div class="prodrow"><img class="img" src="dor-logo.png"><div class="info"><b>${x.name}</b><small>${x.loc}</small></div><div class="right"><b>${x.km} km</b></div></div>`).join('')}`;}
 function vCos(){const ids=Object.keys(state.cart);
  if(!ids.length)return `<div class="empty">Coșul e gol. 🧺<br><button class="btn g" style="margin-top:10px" onclick="go('acasa')">Vezi produsele</button></div>`;
  return `<h2 class="sec">Coșul tău</h2>${ids.map(id=>prodrowHTML(prod(id),true)).join('')}
@@ -276,16 +301,16 @@ function producerHTML(){return `<div class="card"><b>👨‍ Panou Producător (
  <div class="field"><label>Preț (lei)</label><input id="np-price" type="number" step="0.1" placeholder="ex. 9.5"></div>
  <div class="field"><label>Unitate</label><select id="np-unit"><option>kg</option><option>buc</option></select></div>
  <div class="field"><label>Categorie</label><select id="np-cat">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></div>
- <div class="field"><label>Emoji</label><input id="np-img" placeholder="ex. 🥒" maxlength="4"></div>
+ <div class="field"><label>Poza (nume fișier din GitHub)</label><input id="np-img" placeholder="ex. castraveti.jpg"></div>
  <button class="btn g" style="width:100%" onclick="addProduct()">+ Adaugă produsul</button></div>`;}
 function addProduct(){const n=$('#np-name'),pr=$('#np-price');if(!n||!n.value||!pr||!pr.value){alert('Completează nume și preț.');return;}
  state.extraProducts=state.extraProducts||[];
- state.extraProducts.push({id:'x'+Date.now(),p:'p1',name:n.value,price:+pr.value,unit:$('#np-unit').value,cat:$('#np-cat').value,img:($('#np-img').value||'🥬'),season:true,desc:'Adăugat din panoul producătorului.'});
+ state.extraProducts.push({id:'x'+Date.now(),p:'p1',name:n.value,price:+pr.value,unit:$('#np-unit').value,cat:$('#np-cat').value,img:($('#np-img').value||'gogonele.jpg'),season:true,desc:'Adăugat din panoul producătorului.'});
  save();render();alert('✅ Produs adăugat!');}
 function adminHTML(){return `<div class="card"><b>🛠️ Admin — etichete reclame</b>
  ${Object.keys(state.badges).map(k=>`<div class="field"><label>${k==='dor'?'Dor de Casă':'Servicii Locale'} (badge)</label><input value="${state.badges[k]}" onchange="state.badges['${k}']=this.value;save();render()"></div>`).join('')}</div>
  <div class="card"><b>✅ Verificare producători</b>
- ${PRODUCERS.map(f=>`<div class="prodrow"><div class="info"><b>${f.name}</b><small>${f.loc}</small></div><button class="btn o" onclick="toggleVerif('${f.id}')">${isVerif(f.id)?'✅ Verificat':'⬜ Neverificat'}</button></div>`).join('')}</div>`;}
+ ${PRODUCERS.map(f=>`<div class="prodrow"><img class="img" src="${f.img}" style="border-radius:50%"><div class="info"><b>${f.name}</b><small>${f.loc}</small></div><button class="btn o" onclick="toggleVerif('${f.id}')">${isVerif(f.id)?'✅ Verificat':'⬜ Neverificat'}</button></div>`).join('')}</div>`;}
 function toggleVerif(id){state.verif[id]=!isVerif(id);save();render();}
 function rebuy(i){const h=state.history[i];h.items.forEach(it=>{state.cart[it.id]=(state.cart[it.id]||0)+it.qty;});save();go('cos');}
 function exportBackup(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='aprozar-backup.json';a.click();}
